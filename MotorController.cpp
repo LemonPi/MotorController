@@ -8,18 +8,24 @@ MotorController::MotorController(int logicC, int logicD, int enableA)
     pinMode(_logicDPin, OUTPUT);
 }
 
-void MotorController::setSpeed(uint8_t pwm) {
+void MotorController::setVelocity(int pwm) {
     _lastPWM = pwm;
 }
 
-void MotorController::goCounterClockWise() const {
-    go(LOW, HIGH);
+int MotorController::getVelocity() const {
+    return _lastPWM;
 }
-void MotorController::goClockWise() const {
-    go(HIGH, LOW);
+
+void MotorController::go() const {
+    if (_lastPWM < 0) {
+        go(HIGH, LOW, -_lastPWM);
+    } else {
+        go(LOW, HIGH, _lastPWM);
+    }
 }
+
 void MotorController::fastStop() const {
-    go(LOW, LOW);
+    go(LOW, LOW, 255);
 }
 void MotorController::floatStop() const {
     go(LOW, LOW, 0);
@@ -28,8 +34,5 @@ void MotorController::floatStop() const {
 void MotorController::go(int C, int D, int pwm) const {
     digitalWrite(_logicCPin, C);
     digitalWrite(_logicDPin, D);
-    if (pwm == NO_VALUE) {
-        pwm = _lastPWM;
-    }
     analogWrite(_enableAPin, pwm);
 }

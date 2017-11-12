@@ -18,26 +18,27 @@ class MotorController {
     MotorController(int logicC, int logicD, int enableA);
 
     /**
-     * @brief Select how fast to turn.
-     * @param pwm Pulse width modulation value [0,255], with higher value
+     * @brief Select how fast to turn and in which direction.
+     * @param pwm Pulse width modulation value [-255,255], with higher value
      * corresponding to higher speed.
      */
-    void setSpeed(uint8_t pwm);
+    void setVelocity(int pwm);
+    int getVelocity() const;
 
     /**
-     * @brief Rotate counterclockwise at last set speed.
+     * @brief Rotate at last set speed.
      * Motor will continue rotating until another rotation command is sent.
      */
-    void goCounterClockWise() const;
-    void goClockWise() const;
+    void go() const;
+
     void fastStop() const;
     void floatStop() const;
 
   private:
-    void go(int C, int D, int pwm = NO_VALUE) const;
+    void go(int C, int D, int pwm) const;
 
     const int _logicCPin, _logicDPin, _enableAPin;
-    uint8_t _lastPWM;
+    int _lastPWM;
 };
 
 #endif // MOTORCONTROLLER_H
